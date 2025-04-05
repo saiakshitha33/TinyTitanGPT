@@ -1,52 +1,70 @@
-# TinyTitanGPT - Medical Note Generator
 
-TinyTitanGPT is a mini transformer-based language model trained to generate structured clinical notes (in SOAP format) from short, natural-language medical prompts.
+# TinyTitanGPT
 
-Built entirely from scratch in PyTorch, it demonstrates how transformer-based architectures can be adapted for real-world healthcare applications such as clinical documentation automation.
+TinyTitanGPT is a custom, lightweight GPT-style transformer model built from scratch using PyTorch. This project was developed to explore, implement, and analyze the architectural components of transformer-based language models and their behavior in real-world text generation tasks.
+
+The model is trained on a character-level dataset and wrapped with a responsive Streamlit-based user interface to allow real-time generation of SOAP-format clinical notes from short prompts.
+
+---
+
+## Project Objectives
+
+- Implement a GPT-style transformer from scratch using PyTorch
+- Gain a deep understanding of self-attention, positional embeddings, and layer normalization
+- Experiment with vocabulary construction, tokenization, and sampling strategies (temperature and top-k)
+- Build a user-friendly interface to demonstrate practical use cases of autoregressive text generation
+- Apply the model to structured clinical note generation in a SOAP (Subjective, Objective, Assessment, Plan) format
 
 ---
 
 ## Features
 
-- ✅ Implemented in a single file: `tinytitan_gpt.py`
-- ✅ Transformer architecture with multi-head self-attention
-- ✅ Learns from prompt → SOAP note examples
-- ✅ Supports temperature + top-k sampling for creative control
-- ✅ Model checkpointing every 500 steps
-- ✅ Includes CLI-based generation (no UI required)
+- Multi-layer Transformer architecture (6 blocks, 8 attention heads)
+- Character-level encoding and decoding
+- Configurable sampling parameters: temperature and top-k
+- Streamlit-based interactive UI with:
+  - Dark mode styling
+  - Prompt templates
+  - Prompt history saving
+  - Output download as `.txt`
+- Lightweight enough for fast experimentation and deployment on Streamlit Cloud
 
 ---
 
-## Example Use
+## Folder Structure
 
-**Prompt:**
-Pt. complains of chest tightness and shortness of breath during exercise.
+TinyTitanGPT/ ├── tinytitan_gpt.py # Core GPT model and generator function ├── tinytitan_ui.py # Streamlit interface ├── input.txt # Corpus for vocabulary and context ├── tinytitan_checkpoint.pt # Optional: saved model weights ├── requirements.txt # Python dependencies └── README.md # Project overview and usage guide
 
-
-**Generated Output:**
-Output:
-Subjective: 45-year-old male presents with exertional chest tightness and dyspnea. Denies palpitations or dizziness.
-
-Objective: BP: 138/85 mmHg, HR: 88 bpm. Lungs clear to auscultation. No lower extremity edema.
-
-Assessment: Likely stable angina.
-
-Plan:
-
-Order ECG and exercise stress test
-
-Start aspirin 81mg daily
-
-Lifestyle modifications
-
-Follow-up in 1 week
 
 
 
 ---
-Just run the training script :
 
-python tinytitan_gpt.py
+## How to Run Locally
+
+1. **Clone the repository**
+```bash
+git clone https://github.com/<your-username>/TinyTitanGPT.git
+cd TinyTitanGPT
+
+
+2.Create a virtual environment (optional but recommended)
+
+bash
+Copy
+Edit
+python -m venv .venv
+source .venv/bin/activate  # or .venv\Scripts\activate on Windows
+
+
+3.Install dependencies
+bash
+pip install -r requirements.txt
+
+4.Run the app
+
+bash
+streamlit run tinytitan_ui.py
 
 
 ---
