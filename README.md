@@ -69,16 +69,12 @@ python tinytitan_gpt.py
 
 🔮 Future Roadmap
  
- Add Streamlit UI for user-friendly input/output
-
  Expand dataset with real or synthetic SOAP notes
 
- Add unit tests and loss visualization
-
- Deploy via Hugging Face or Flask API
 
 👩‍⚕️ Created By
 Sai Akshitha Reddy Kota
+
 Experienced Python Developer | Data Scientist |  AI
 🔗 GitHub: [https://github.com/saiakshitha33]
 📫 [saiakshitha.kota@gmail.com] 
