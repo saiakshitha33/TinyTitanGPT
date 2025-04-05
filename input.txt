@@ -1,0 +1,114 @@
+### Input:
+Pt. complains of chest pain, worse on exertion.
+
+### Output:
+Subjective:
+Patient reports experiencing chest pain that worsens with exertion and improves with rest. Describes the pain as a pressure-like sensation in the central chest area, lasting approximately 5 minutes per episode. Denies any radiation of pain, nausea, or diaphoresis.
+
+Objective:
+Vital Signs: BP 130/85 mmHg, HR 78 bpm, RR 16, Temp 98.6°F.
+Exam: Normal heart sounds, lungs clear, no edema.
+
+Assessment:
+Stable angina.
+
+Plan:
+1. ECG and cardiac enzymes.
+2. Stress test.
+3. Start aspirin + nitro PRN.
+4. Follow up in 1 week.
+
+### Input:
+Diabetic patient with elevated HbA1c, no current symptoms.
+
+### Output:
+Subjective:
+55-year-old female with type 2 diabetes. No hypo/hyperglycemia symptoms. Diet adherence inconsistent.
+
+Objective:
+BP 140/90, HR 72. HbA1c: 7.5%. Fasting glucose: 150 mg/dL.
+
+Assessment:
+Suboptimally controlled type 2 diabetes.
+
+Plan:
+1. Increase metformin to 1000 mg BID.
+2. Daily glucose monitoring.
+3. Nutrition counseling.
+4. Recheck A1c in 3 months.
+
+### Input:
+Hypertensive patient experiencing occasional headaches.
+
+### Output:
+Subjective:
+60-year-old male on antihypertensives reports occasional headaches, no other symptoms.
+
+Objective:
+BP 150/95, HR 80. Heart and lung exams unremarkable.
+
+Assessment:
+Uncontrolled hypertension.
+
+Plan:
+1. Add hydrochlorothiazide 12.5 mg.
+2. Recommend DASH diet.
+3. Track BP at home.
+4. Follow up in 4 weeks.
+
+### Input:
+Patient with low back pain after lifting heavy object.
+
+### Output:
+Subjective:
+40-year-old male reports acute low back pain post lifting. No radiation or neurological symptoms.
+
+Objective:
+Tender lumbar muscles. Normal neuro exam. Negative straight leg raise.
+
+Assessment:
+Acute musculoskeletal low back pain.
+
+Plan:
+1. Ibuprofen 600 mg TID PRN.
+2. Avoid lifting.
+3. Light stretching.
+4. Follow up in 1 week if no improvement.
+
+### Input:
+Child with nighttime coughing, history of asthma.
+
+### Output:
+Subjective:
+8-year-old boy with mild nighttime cough, no ER visits, using inhaler occasionally.
+
+Objective:
+RR 20. Lungs clear. No wheezing.
+
+Assessment:
+Mild persistent asthma.
+
+Plan:
+1. Continue inhaled corticosteroids.
+2. Review inhaler technique.
+3. Update asthma action plan.
+4. Follow up in 3 months.
+
+### Input:
+Patient presents with depressed mood and fatigue.
+
+### Output:
+Subjective:
+30-year-old female with sadness, fatigue, poor sleep, low appetite. No suicidal ideation.
+
+Objective:
+Sad affect, tearful, speaks slowly. PHQ-9 pending.
+
+Assessment:
+Moderate depression.
+
+Plan:
+1. Start sertraline 50 mg daily.
+2. Recommend therapy.
+3. Provide crisis hotline.
+4. Follow up in 2 weeks.
