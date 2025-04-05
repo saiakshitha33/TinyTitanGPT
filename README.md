@@ -1,4 +1,4 @@
-# 🧠 TinyTitanGPT - Medical Note Generator
+# TinyTitanGPT - Medical Note Generator
 
 TinyTitanGPT is a mini transformer-based language model trained to generate structured clinical notes (in SOAP format) from short, natural-language medical prompts.
 
@@ -6,7 +6,7 @@ Built entirely from scratch in PyTorch, it demonstrates how transformer-based ar
 
 ---
 
-## 🚀 Features
+## Features
 
 - ✅ Implemented in a single file: `tinytitan_gpt.py`
 - ✅ Transformer architecture with multi-head self-attention
@@ -17,7 +17,7 @@ Built entirely from scratch in PyTorch, it demonstrates how transformer-based ar
 
 ---
 
-## 💬 Example Use
+## Example Use
 
 **Prompt:**
 Pt. complains of chest tightness and shortness of breath during exercise.
@@ -76,7 +76,9 @@ python tinytitan_gpt.py
 Sai Akshitha Reddy Kota
 
 Experienced Python Developer | Data Scientist |  AI
+
 🔗 GitHub: [https://github.com/saiakshitha33]
+
 📫 [saiakshitha.kota@gmail.com] 
 
 ⚠️ Disclaimer
