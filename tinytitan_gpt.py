@@ -16,29 +16,14 @@ n_embed = 128
 n_head = 8
 n_layer = 6
 
-# === Load Data ===
-with open("input.txt", "r") as f:
-    text = f.read()
-
-chars = sorted(list(set(text)))
-vocab_size = len(chars)
-
-stoi = {ch: i for i, ch in enumerate(chars)}
-itos = dict(enumerate(chars))
-encode = lambda s: [stoi[c] for c in s]
-decode = lambda l: ''.join([itos.get(i, '?') for i in l])
-
-data = torch.tensor(encode(text), dtype=torch.long)
-n = int(0.9 * len(data))
-train_data = data[:n]
-val_data = data[n:]
-
-def get_batch(split):
-    data = train_data if split == "train" else val_data
-    ix = torch.randint(len(data) - block_size, (batch_size,))
-    x = torch.stack([data[i:i+block_size] for i in ix])
-    y = torch.stack([data[i+1:i+block_size+1] for i in ix])
-    return x.to(device), y.to(device)
+# === Vocab Builder ===
+def build_vocab(text):
+    chars = sorted(list(set(text)))
+    stoi = {ch: i for i, ch in enumerate(chars)}
+    itos = dict(enumerate(chars))
+    encode = lambda s: [stoi[c] for c in s]
+    decode = lambda l: ''.join([itos.get(i, '?') for i in l])
+    return chars, stoi, itos, encode, decode
 
 # === Model Components ===
 class Head(nn.Module):
@@ -105,16 +90,16 @@ class Block(nn.Module):
 class TinyTitanGPT(nn.Module):
     def __init__(self):
         super().__init__()
-        self.token_embedding = nn.Embedding(vocab_size, n_embed)
+        self.token_embedding = nn.Embedding(256, n_embed)  # will resize after vocab is known
         self.pos_embedding = nn.Embedding(block_size, n_embed)
         self.blocks = nn.Sequential(*[Block(n_embed, n_head) for _ in range(n_layer)])
         self.ln_f = nn.LayerNorm(n_embed)
-        self.lm_head = nn.Linear(n_embed, vocab_size)
+        self.lm_head = nn.Linear(n_embed, 256)
 
     def forward(self, idx, targets=None):
         B, T = idx.shape
         tok_emb = self.token_embedding(idx)
-        pos_emb = self.pos_embedding(torch.arange(T, device=device))
+        pos_emb = self.pos_embedding(torch.arange(T, device=idx.device))
         x = tok_emb + pos_emb
         x = self.blocks(x)
         x = self.ln_f(x)
@@ -135,44 +120,22 @@ class TinyTitanGPT(nn.Module):
             logits, _ = self(idx_cond)
             logits = logits[:, -1, :] / temperature
 
+            
             if top_k is not None:
-                v, _ = torch.topk(logits, top_k)
+                k = min(top_k, logits.size(-1))  # Clamp top_k to vocab size
+                v, _ = torch.topk(logits, k)
                 logits[logits < v[:, [-1]]] = -float('Inf')
+
 
             probs = F.softmax(logits, dim=-1)
             next_idx = torch.multinomial(probs, num_samples=1)
             idx = torch.cat((idx, next_idx), dim=1)
         return idx
 
-# === Train or Load Model ===
-model = TinyTitanGPT().to(device)
-checkpoint_path = "tinytitan_checkpoint.pt"
-
-if os.path.exists(checkpoint_path):
-    model.load_state_dict(torch.load(checkpoint_path))
-    print("✅ Loaded TinyTitan from checkpoint!")
-
-optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate)
-
-for step in range(max_iters):
-    xb, yb = get_batch('train')
-    logits, loss = model(xb, yb)
-    optimizer.zero_grad()
-    loss.backward()
-    optimizer.step()
-
-    if step % eval_interval == 0:
-        print(f"Step {step} | Loss: {loss.item():.4f}")
-
-    if step % 500 == 0 and step > 0:
-        torch.save(model.state_dict(), checkpoint_path)
-        print(f"💾 Saved checkpoint at step {step}")
-
-# === Generate Sample ===
-def generate_note(prompt, tokens=500, temperature=0.9, top_k=30):
-    encoded = torch.tensor([stoi[c] for c in prompt], dtype=torch.long).unsqueeze(0).to(device)
-    out = model.generate(encoded, max_new_tokens=tokens, temperature=temperature, top_k=top_k)
+# === Text Generation Wrapper ===
+def generate_note(prompt, model, stoi, decode, tokens=500, temperature=0.9, top_k=30):
+    device = next(model.parameters()).device
+    encoded = torch.tensor([stoi.get(c, 0) for c in prompt], dtype=torch.long).unsqueeze(0).to(device)
+    with torch.no_grad():
+        out = model.generate(encoded, max_new_tokens=tokens, temperature=temperature, top_k=top_k)
     return decode(out[0].tolist())
-
-print("\n🧠 TinyTitan says:\n")
-print(generate_note("### Input:\nPt. complains of fatigue and joint pain.\n\n### Output:\n"))
