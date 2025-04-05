@@ -35,16 +35,13 @@ The model is trained on a character-level dataset and wrapped with a responsive 
 ## How to Run Locally
 ```
 1. Clone the repository
-  bash
+bash
 git clone https://github.com/<your-username>/TinyTitanGPT.git
 cd TinyTitanGPT
 
 
 2.Create a virtual environment (optional but recommended)
-
 bash
-Copy
-Edit
 python -m venv .venv
 source .venv/bin/activate  # or .venv\Scripts\activate on Windows
 
@@ -54,7 +51,6 @@ bash
 pip install -r requirements.txt
 
 4.Run the app
-
 bash
 streamlit run tinytitan_ui.py
 ```
