@@ -31,19 +31,11 @@ The model is trained on a character-level dataset and wrapped with a responsive 
 
 ---
 
-## Folder Structure
-
-TinyTitanGPT/ ├── tinytitan_gpt.py # Core GPT model and generator function ├── tinytitan_ui.py # Streamlit interface ├── input.txt # Corpus for vocabulary and context ├── tinytitan_checkpoint.pt # Optional: saved model weights ├── requirements.txt # Python dependencies └── README.md # Project overview and usage guide
-
-
-
-
----
 
 ## How to Run Locally
 
-1. **Clone the repository**
-```bash
+1. Clone the repository
+  bash
 git clone https://github.com/<your-username>/TinyTitanGPT.git
 cd TinyTitanGPT
 
@@ -67,6 +59,7 @@ bash
 streamlit run tinytitan_ui.py
 
 
+---
 ---
 
 ## 🧠 Technical Overview (In-Depth)
