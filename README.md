@@ -32,7 +32,7 @@ The model is trained on a character-level dataset and wrapped with a responsive 
 ---
 
 
-## How to Run Locally
+## **How to Run Locally**
 
 1. Clone the repository
   bash
@@ -59,7 +59,7 @@ bash
 streamlit run tinytitan_ui.py
 
 
----
+
 ---
 
 ## 🧠 Technical Overview (In-Depth)
