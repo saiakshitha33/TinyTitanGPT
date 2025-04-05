@@ -33,7 +33,7 @@ The model is trained on a character-level dataset and wrapped with a responsive 
 
 
 ## How to Run Locally
-'''
+```
 1. Clone the repository
   bash
 git clone https://github.com/<your-username>/TinyTitanGPT.git
@@ -57,8 +57,7 @@ pip install -r requirements.txt
 
 bash
 streamlit run tinytitan_ui.py
-
-'''
+```
 
 ---
 
