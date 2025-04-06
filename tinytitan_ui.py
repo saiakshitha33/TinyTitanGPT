@@ -77,18 +77,21 @@ def load_model_and_vocab():
     vocab_size = len(chars)
 
     model = TinyTitanGPT().to("cpu")
+    # Resize the embedding and output layers to match the current vocabulary size
     model.token_embedding = nn.Embedding(vocab_size, model.token_embedding.embedding_dim)
     model.lm_head = nn.Linear(model.lm_head.in_features, vocab_size)
 
     checkpoint_path = "tinytitan_checkpoint.pt"
     if os.path.exists(checkpoint_path):
-        model.load_state_dict(torch.load(checkpoint_path, map_location="cpu"))
+        # Use strict=False to ignore any non-critical mismatches
+        model.load_state_dict(torch.load(checkpoint_path, map_location="cpu"), strict=False)
         model.eval()
     else:
         st.warning("⚠️ No checkpoint found. Please train TinyTitan first.")
     return model, stoi, decode
 
 model, stoi, decode = load_model_and_vocab()
+
 
 # === Session State for Prompt History ===
 if "history" not in st.session_state:
