@@ -30,7 +30,23 @@ The model is trained on a character-level dataset and wrapped with a responsive 
 - Lightweight enough for fast experimentation and deployment on Streamlit Cloud
 
 ---
+## Live Demo
 
+ **Try it now on Streamlit Cloud**:  
+🔗 [https://tinytitangpt.streamlit.app](https://tinytitangpt.streamlit.app)
+
+---
+
+## Model Architecture
+Transformer-based GPT model (6 layers, 8 heads)
+
+Embedding size: 128
+
+Trained on custom SOAP notes
+
+Uses causal self-attention, layer norm, and feed-forward blocks
+
+---
 
 ## How to Run Locally
 ```
@@ -81,7 +97,7 @@ streamlit run tinytitan_ui.py
 👩‍⚕️ Created By
 Sai Akshitha Reddy Kota
 
-Experienced Python Developer | Data Scientist |  AI
+Experienced Data Scientist | ML Engineer
 
 🔗 GitHub: [https://github.com/saiakshitha33]
 
