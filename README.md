@@ -97,7 +97,7 @@ streamlit run tinytitan_ui.py
 👩‍⚕️ Created By
 Sai Akshitha Reddy Kota
 
-Experienced Python Developer | Data Scientist |  AI
+Experienced Data Scientist | ML Engineer
 
 🔗 GitHub: [https://github.com/saiakshitha33]
 
