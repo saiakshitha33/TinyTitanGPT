@@ -10,7 +10,6 @@ batch_size = 16
 eval_interval = 20
 learning_rate = 1e-3
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
-eval_iters = 10
 
 n_embed = 128
 n_head = 8
@@ -86,15 +85,15 @@ class Block(nn.Module):
         x = x + self.ffwd(self.ln2(x))
         return x
 
-# === TinyTitan Model ===
+# === TinyTitanGPT ===
 class TinyTitanGPT(nn.Module):
-    def __init__(self):
+    def __init__(self, vocab_size):
         super().__init__()
-        self.token_embedding = nn.Embedding(256, n_embed)  # will resize after vocab is known
+        self.token_embedding = nn.Embedding(vocab_size, n_embed)
         self.pos_embedding = nn.Embedding(block_size, n_embed)
         self.blocks = nn.Sequential(*[Block(n_embed, n_head) for _ in range(n_layer)])
         self.ln_f = nn.LayerNorm(n_embed)
-        self.lm_head = nn.Linear(n_embed, 256)
+        self.lm_head = nn.Linear(n_embed, vocab_size)
 
     def forward(self, idx, targets=None):
         B, T = idx.shape
@@ -119,31 +118,25 @@ class TinyTitanGPT(nn.Module):
             idx_cond = idx[:, -block_size:]
             logits, _ = self(idx_cond)
             logits = logits[:, -1, :] / temperature
-
-            
             if top_k is not None:
-                k = min(top_k, logits.size(-1))  # Clamp top_k to vocab size
+                k = min(top_k, logits.size(-1))
                 v, _ = torch.topk(logits, k)
                 logits[logits < v[:, [-1]]] = -float('Inf')
-
-
             probs = F.softmax(logits, dim=-1)
             next_idx = torch.multinomial(probs, num_samples=1)
             idx = torch.cat((idx, next_idx), dim=1)
         return idx
 
-# === Text Generation Wrapper ===
+# === Generation Helper ===
 def generate_note(prompt, model, stoi, decode, tokens=500, temperature=0.9, top_k=30):
     device = next(model.parameters()).device
     encoded = torch.tensor([stoi.get(c, 0) for c in prompt], dtype=torch.long).unsqueeze(0).to(device)
     with torch.no_grad():
         out = model.generate(encoded, max_new_tokens=tokens, temperature=temperature, top_k=top_k)
-    return decode(out[0].tolist())
+    return decode(out[0].tolist()).strip()
 
-
-
+# === Training Loop ===
 if __name__ == "__main__":
-    # Load data and vocab
     with open("input.txt", "r") as f:
         text = f.read()
     chars, stoi, itos, encode, decode = build_vocab(text)
@@ -160,13 +153,11 @@ if __name__ == "__main__":
         y = torch.stack([data[i+1:i+block_size+1] for i in ix])
         return x.to(device), y.to(device)
 
-    model = TinyTitanGPT().to(device)
-    model.token_embedding = nn.Embedding(vocab_size, n_embed)
-    model.lm_head = nn.Linear(n_embed, vocab_size)
-
+    model = TinyTitanGPT(vocab_size).to(device)
     optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate)
     checkpoint_path = "tinytitan_checkpoint.pt"
 
+    print("🚀 Starting training...")
     for step in range(max_iters):
         xb, yb = get_batch("train")
         logits, loss = model(xb, yb)
@@ -181,6 +172,5 @@ if __name__ == "__main__":
             torch.save(model.state_dict(), checkpoint_path)
             print(f"💾 Saved checkpoint at step {step}")
 
-    # Save final checkpoint
     torch.save(model.state_dict(), checkpoint_path)
     print("✅ Final checkpoint saved.")

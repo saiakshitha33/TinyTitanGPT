@@ -1,7 +1,3 @@
-# TinyTitanGPT - Dark Mode UI + Prompt History
-
-
-
 import os
 import torch
 
@@ -65,33 +61,42 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# === Header ===
-st.title("🧠 TinyTitanGPT")
-st.subheader("Auto-generate SOAP Clinical Notes with a Custom GPT")
+# === Safe Checkpoint Loader ===
+def safe_load_checkpoint(model, checkpoint_path):
+    checkpoint = torch.load(checkpoint_path, map_location="cpu")
+    model_state = model.state_dict()
+    for key in checkpoint:
+        if key in model_state and checkpoint[key].shape != model_state[key].shape:
+            print(f"⚠️ Skipping '{key}' due to shape mismatch: "
+                  f"{checkpoint[key].shape} vs {model_state[key].shape}")
+            checkpoint[key] = model_state[key]
+    model.load_state_dict(checkpoint, strict=False)
+    print("✅ Model loaded (with safe fallback)")
 
 # === Load Model + Vocab ===
 def load_model_and_vocab():
+    if not os.path.exists("input.txt"):
+        st.error("❌ input.txt not found. Please add your training data.")
+        st.stop()
+
     with open("input.txt", "r") as f:
         text = f.read()
+
     chars, stoi, itos, encode, decode = build_vocab(text)
     vocab_size = len(chars)
 
-    model = TinyTitanGPT().to("cpu")
-    # Resize the embedding and output layers to match the current vocabulary size
-    model.token_embedding = nn.Embedding(vocab_size, model.token_embedding.embedding_dim)
-    model.lm_head = nn.Linear(model.lm_head.in_features, vocab_size)
-
+    model = TinyTitanGPT(vocab_size).to("cpu")
     checkpoint_path = "tinytitan_checkpoint.pt"
+
     if os.path.exists(checkpoint_path):
-        # Use strict=False to ignore any non-critical mismatches
-        model.load_state_dict(torch.load(checkpoint_path, map_location="cpu"), strict=False)
+        safe_load_checkpoint(model, checkpoint_path)
         model.eval()
     else:
         st.warning("⚠️ No checkpoint found. Please train TinyTitan first.")
+
     return model, stoi, decode
 
 model, stoi, decode = load_model_and_vocab()
-
 
 # === Session State for Prompt History ===
 if "history" not in st.session_state:
