@@ -139,3 +139,48 @@ def generate_note(prompt, model, stoi, decode, tokens=500, temperature=0.9, top_
     with torch.no_grad():
         out = model.generate(encoded, max_new_tokens=tokens, temperature=temperature, top_k=top_k)
     return decode(out[0].tolist())
+
+
+
+if __name__ == "__main__":
+    # Load data and vocab
+    with open("input.txt", "r") as f:
+        text = f.read()
+    chars, stoi, itos, encode, decode = build_vocab(text)
+    vocab_size = len(chars)
+    data = torch.tensor(encode(text), dtype=torch.long)
+    n = int(0.9 * len(data))
+    train_data = data[:n]
+    val_data = data[n:]
+
+    def get_batch(split):
+        data = train_data if split == "train" else val_data
+        ix = torch.randint(len(data) - block_size, (batch_size,))
+        x = torch.stack([data[i:i+block_size] for i in ix])
+        y = torch.stack([data[i+1:i+block_size+1] for i in ix])
+        return x.to(device), y.to(device)
+
+    model = TinyTitanGPT().to(device)
+    model.token_embedding = nn.Embedding(vocab_size, n_embed)
+    model.lm_head = nn.Linear(n_embed, vocab_size)
+
+    optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate)
+    checkpoint_path = "tinytitan_checkpoint.pt"
+
+    for step in range(max_iters):
+        xb, yb = get_batch("train")
+        logits, loss = model(xb, yb)
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+        if step % eval_interval == 0:
+            print(f"Step {step} | Loss: {loss.item():.4f}")
+
+        if step % 500 == 0 and step > 0:
+            torch.save(model.state_dict(), checkpoint_path)
+            print(f"💾 Saved checkpoint at step {step}")
+
+    # Save final checkpoint
+    torch.save(model.state_dict(), checkpoint_path)
+    print("✅ Final checkpoint saved.")
