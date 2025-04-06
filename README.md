@@ -1,53 +1,59 @@
-# 🧠 TinyTitanGPT - Medical Note Generator
 
-TinyTitanGPT is a mini transformer-based language model trained to generate structured clinical notes (in SOAP format) from short, natural-language medical prompts.
+# TinyTitanGPT
 
-Built entirely from scratch in PyTorch, it demonstrates how transformer-based architectures can be adapted for real-world healthcare applications such as clinical documentation automation.
+TinyTitanGPT is a custom, lightweight GPT-style transformer model built from scratch using PyTorch. This project was developed to explore, implement, and analyze the architectural components of transformer-based language models and their behavior in real-world text generation tasks.
 
----
-
-## 🚀 Features
-
-- ✅ Implemented in a single file: `tinytitan_gpt.py`
-- ✅ Transformer architecture with multi-head self-attention
-- ✅ Learns from prompt → SOAP note examples
-- ✅ Supports temperature + top-k sampling for creative control
-- ✅ Model checkpointing every 500 steps
-- ✅ Includes CLI-based generation (no UI required)
+The model is trained on a character-level dataset and wrapped with a responsive Streamlit-based user interface to allow real-time generation of SOAP-format clinical notes from short prompts.
 
 ---
 
-## 💬 Example Use
+## Project Objectives
 
-**Prompt:**
-Pt. complains of chest tightness and shortness of breath during exercise.
-
-
-**Generated Output:**
-Output:
-Subjective: 45-year-old male presents with exertional chest tightness and dyspnea. Denies palpitations or dizziness.
-
-Objective: BP: 138/85 mmHg, HR: 88 bpm. Lungs clear to auscultation. No lower extremity edema.
-
-Assessment: Likely stable angina.
-
-Plan:
-
-Order ECG and exercise stress test
-
-Start aspirin 81mg daily
-
-Lifestyle modifications
-
-Follow-up in 1 week
-
-
+- Implement a GPT-style transformer from scratch using PyTorch
+- Gain a deep understanding of self-attention, positional embeddings, and layer normalization
+- Experiment with vocabulary construction, tokenization, and sampling strategies (temperature and top-k)
+- Build a user-friendly interface to demonstrate practical use cases of autoregressive text generation
+- Apply the model to structured clinical note generation in a SOAP (Subjective, Objective, Assessment, Plan) format
 
 ---
-Just run the training script :
 
-python tinytitan_gpt.py
+## Features
 
+- Multi-layer Transformer architecture (6 blocks, 8 attention heads)
+- Character-level encoding and decoding
+- Configurable sampling parameters: temperature and top-k
+- Streamlit-based interactive UI with:
+  - Dark mode styling
+  - Prompt templates
+  - Prompt history saving
+  - Output download as `.txt`
+- Lightweight enough for fast experimentation and deployment on Streamlit Cloud
+
+---
+
+
+## How to Run Locally
+```
+1. Clone the repository
+bash
+git clone https://github.com/<your-username>/TinyTitanGPT.git
+cd TinyTitanGPT
+
+
+2.Create a virtual environment (optional but recommended)
+bash
+python -m venv .venv
+source .venv/bin/activate  # or .venv\Scripts\activate on Windows
+
+
+3.Install dependencies
+bash
+pip install -r requirements.txt
+
+4.Run the app
+bash
+streamlit run tinytitan_ui.py
+```
 
 ---
 
@@ -69,18 +75,16 @@ python tinytitan_gpt.py
 
 🔮 Future Roadmap
  
- Add Streamlit UI for user-friendly input/output
-
  Expand dataset with real or synthetic SOAP notes
 
- Add unit tests and loss visualization
-
- Deploy via Hugging Face or Flask API
 
 👩‍⚕️ Created By
 Sai Akshitha Reddy Kota
+
 Experienced Python Developer | Data Scientist |  AI
+
 🔗 GitHub: [https://github.com/saiakshitha33]
+
 📫 [saiakshitha.kota@gmail.com] 
 
 ⚠️ Disclaimer
